@@ -1,0 +1,10 @@
+name: ci
+
+on:
+    - push
+
+jobs:
+    check-commit:
+        name: Check
+
+        uses: hxpm/gha/.github/workflows/check-commit.yaml@main

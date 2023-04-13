@@ -16,3 +16,19 @@ jobs:
 
         with:
             docker-service: hx
+
+    check-types:
+        name: Check
+
+        needs:
+            - check-commit
+            - compute-cache-key
+
+        uses: hxpm/gha/.github/workflows/elixir-check-types.yaml@main
+
+        with:
+            cache-key: ${{ needs.compute-cache-key.outputs.cache-key }}
+
+            docker-service: hx
+
+            project-name: hx

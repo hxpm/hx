@@ -1,0 +1,29 @@
+services:
+    hx:
+        image: ghcr.io/hxpm/elixir:1.14.4
+
+        volumes:
+            - source: ../
+
+              target: /usr/local/src/hx
+
+              type: bind
+
+            - source: hx
+
+              target: /usr/local/src/hx/_build
+
+              type: volume
+
+            - source: hx
+
+              target: /usr/local/src/hx/deps
+
+              type: volume
+
+        working_dir: /usr/local/src/hx
+
+version: "3.9"
+
+volumes:
+    hx:

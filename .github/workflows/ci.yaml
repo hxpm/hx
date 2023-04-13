@@ -48,3 +48,19 @@ jobs:
             docker-service: hx
 
             project-name: hx
+
+    check-xref:
+        name: Check
+
+        needs:
+            - check-commit
+            - compute-cache-key
+
+        uses: hxpm/gha/.github/workflows/elixir-check-xref.yaml@main
+
+        with:
+            cache-key: ${{ needs.compute-cache-key.outputs.cache-key }}
+
+            docker-service: hx
+
+            project-name: hx

@@ -8,3 +8,11 @@ jobs:
         name: Check
 
         uses: hxpm/gha/.github/workflows/check-commit.yaml@main
+
+    compute-cache-key:
+        name: Compute
+
+        uses: hxpm/gha/.github/workflows/elixir-compute-cache-key.yaml@main
+
+        with:
+            docker-service: hx

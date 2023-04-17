@@ -14,6 +14,8 @@ defmodule Hx.Supervisor do
   end
 
   defp children do
-    []
+    [
+      {Hx.Config, []}
+    ]
   end
 end

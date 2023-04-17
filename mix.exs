@@ -20,6 +20,14 @@ defmodule Hx.MixProject do
 
   defp deps do
     [
+      {:ecto, "~> 3.10"},
+      {:ecto_sql, "~> 3.10"},
+      {:postgrex, "~> 0.17"},
+
+      #
+      # dev
+      #
+
       {:dialyxir, "~> 1.3", only: :dev, runtime: false},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false}
     ]

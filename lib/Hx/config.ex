@@ -3,7 +3,7 @@ defmodule Hx.Config do
 
   require Logger
 
-  @keys []
+  @keys [:database_url]
 
   @doc """
   Loads configuration from the OS environment and returns a map of the values.
@@ -47,10 +47,7 @@ defmodule Hx.Config do
   def validate(config) do
     Enum.reduce(@keys, :ok, fn
       key, :ok ->
-        case validate(config, key) do
-          :ok ->
-            :ok
-        end
+        validate(config, key)
 
       _, acc ->
         acc
@@ -62,6 +59,16 @@ defmodule Hx.Config do
   is valid. Otherwise, `{:error, String.t()}` is returned.
   """
   @spec validate(map, atom) :: :ok | {:error, String.t()}
+  def validate(config, :database_url = key) do
+    case config[key] do
+      value when is_nil(value) or value == "" ->
+        {:error, "#{to_env(key)} is required."}
+
+      _ ->
+        :ok
+    end
+  end
+
   def validate(_, _) do
     :ok
   end
@@ -75,7 +82,7 @@ defmodule Hx.Config do
         {:ok, config}
 
       {:error, message} ->
-        Logger.error(message)
+        Logger.error("Failed to load configuration. #{message}")
 
         System.stop(1)
     end

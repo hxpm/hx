@@ -18,6 +18,14 @@ defmodule Hx.Config do
   end
 
   @doc """
+  Retrieves the value of a configuration option for the given key.
+  """
+  @spec get(module, atom) :: any
+  def get(server \\ __MODULE__, key) do
+    GenServer.call(server, {:get, key})
+  end
+
+  @doc """
   Loads configuration from the OS environment and returns a map of the values.
   """
   @spec load :: {:ok, map} | {:error, String.t()}

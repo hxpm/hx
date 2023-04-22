@@ -1,9 +1,21 @@
 defmodule Hx.Config do
+  @moduledoc """
+  Provides access to application runtime configuration.
+  """
+
   use GenServer
 
   require Logger
 
   @keys []
+
+  @doc """
+  Retrieves the value of a configuration option for the given key.
+  """
+  @spec get(module, atom) :: any
+  def get(server \\ __MODULE__, key) do
+    GenServer.call(server, {:get, key})
+  end
 
   @doc """
   Loads configuration from the OS environment and returns a map of the values.

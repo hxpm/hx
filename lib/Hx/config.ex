@@ -116,6 +116,19 @@ defmodule Hx.Config do
     end
   end
 
+  @spec coerce(map) :: map
+  defp coerce(config) do
+    Enum.reduce(@keys, %{}, fn
+      key, acc ->
+        Map.put(acc, key, coerce(config, key))
+    end)
+  end
+
+  @spec coerce(map, atom) :: any
+  defp coerce(config, key) do
+    config[key]
+  end
+
   @impl true
   def handle_call({:get, key}, _from, config) do
     {:reply, config[key], config}

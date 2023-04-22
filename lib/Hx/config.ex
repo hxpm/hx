@@ -91,13 +91,26 @@ defmodule Hx.Config do
 
     case validate(config) do
       :ok ->
-        {:ok, config}
+        {:ok, coerce(config)}
 
       {:error, message} ->
         Logger.error("Failed to load configuration. #{message}")
 
         System.stop(1)
     end
+  end
+
+  @spec coerce(map) :: map
+  defp coerce(config) do
+    Enum.reduce(@keys, %{}, fn
+      key, acc ->
+        Map.put(acc, key, coerce(config, key))
+    end)
+  end
+
+  @spec coerce(map, atom) :: any
+  defp coerce(config, key) do
+    config[key]
   end
 
   @impl true

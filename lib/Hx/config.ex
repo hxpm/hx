@@ -42,9 +42,19 @@ defmodule Hx.Config do
     end)
   end
 
-  @spec load(atom, any) :: any
+  @spec load(atom, any) :: {:ok, any} | {:error, String.t()}
+  def load(:database_url = key, value) do
+    cond do
+      is_nil(value) || value == "" ->
+        {:error, "#{to_env(key)} is required."}
+
+      true ->
+        {:ok, value}
+    end
+  end
+
   def load(_key, value) do
-    value
+    {:ok, value}
   end
 
   @spec start_link(keyword) :: GenServer.on_start()

@@ -7,7 +7,7 @@ defmodule Hx.Config do
 
   require Logger
 
-  @keys [:database_url]
+  @keys [:database_pool_size, :database_url]
 
   @doc """
   Retrieves the value of a configuration option for the given key.
@@ -42,7 +42,27 @@ defmodule Hx.Config do
     end)
   end
 
+  @doc """
+  Performs any validation and type conversion of a configuration value to
+  ensure it is properly loaded.
+  """
   @spec load(atom, any) :: {:ok, any} | {:error, String.t()}
+  def load(:database_pool_size = key, value) do
+    cond do
+      is_nil(value) || value == "" ->
+        {:ok, 10}
+
+      true ->
+        case Integer.parse(value) do
+          {value, ""} when value > 0 ->
+            {:ok, value}
+
+          _ ->
+            {:error, "#{to_env(key)} must be a positive integer."}
+        end
+    end
+  end
+
   def load(:database_url = key, value) do
     cond do
       is_nil(value) || value == "" ->

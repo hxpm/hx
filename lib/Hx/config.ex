@@ -20,16 +20,31 @@ defmodule Hx.Config do
   @doc """
   Loads configuration from the OS environment and returns a map of the values.
   """
-  @spec load :: map
+  @spec load :: {:ok, map} | {:error, String.t()}
   def load do
-    Enum.reduce(@keys, %{}, fn
-      key, acc ->
-        env = to_env(key)
+    Enum.reduce(@keys, {:ok, %{}}, fn
+      key, {:ok, config} ->
+        value =
+          key
+          |> to_env()
+          |> System.get_env()
 
-        value = System.get_env(env)
+        case load(key, value) do
+          {:ok, value} ->
+            {:ok, Map.put(config, key, value)}
 
-        Map.put(acc, key, value)
+          {:error, message} ->
+            {:error, message}
+        end
+
+      _, acc ->
+        acc
     end)
+  end
+
+  @spec load(atom, any) :: any
+  def load(_key, value) do
+    value
   end
 
   @spec start_link(keyword) :: GenServer.on_start()
@@ -50,67 +65,17 @@ defmodule Hx.Config do
     "HX_" <> (key |> to_string() |> String.upcase())
   end
 
-  @doc """
-  Validates the provided configuration map against all configuration options.
-  Returns `:ok` if the configuration is valid. Otherwise, `{:error, String.t()}`
-  is returned.
-  """
-  @spec validate(map) :: :ok | {:error, String.t()}
-  def validate(config) do
-    Enum.reduce(@keys, :ok, fn
-      key, :ok ->
-        validate(config, key)
-
-      _, acc ->
-        acc
-    end)
-  end
-
-  @doc """
-  Validates individual configuration options. Returns `:ok` if the configuration
-  is valid. Otherwise, `{:error, String.t()}` is returned.
-  """
-  @spec validate(map, atom) :: :ok | {:error, String.t()}
-  def validate(config, :database_url = key) do
-    case config[key] do
-      value when is_nil(value) or value == "" ->
-        {:error, "#{to_env(key)} is required."}
-
-      _ ->
-        :ok
-    end
-  end
-
-  def validate(_, _) do
-    :ok
-  end
-
   @impl true
   def init(:ok) do
-    config = load()
-
-    case validate(config) do
-      :ok ->
-        {:ok, coerce(config)}
+    case load() do
+      {:ok, config} ->
+        {:ok, config}
 
       {:error, message} ->
         Logger.error("Failed to load configuration. #{message}")
 
         System.stop(1)
     end
-  end
-
-  @spec coerce(map) :: map
-  defp coerce(config) do
-    Enum.reduce(@keys, %{}, fn
-      key, acc ->
-        Map.put(acc, key, coerce(config, key))
-    end)
-  end
-
-  @spec coerce(map, atom) :: any
-  defp coerce(config, key) do
-    config[key]
   end
 
   @impl true

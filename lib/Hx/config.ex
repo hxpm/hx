@@ -43,8 +43,8 @@ defmodule Hx.Config do
   end
 
   @doc """
-  Performs any validation and type conversion of a configuration value to
-  ensure it is properly loaded.
+  Performs any validation and type conversion needed to load a configuration
+  option.
   """
   @spec load(atom, any) :: {:ok, any} | {:error, String.t()}
   def load(:database_pool_size = key, value) do

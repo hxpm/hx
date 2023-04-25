@@ -3,7 +3,7 @@ defmodule Hx.DataCase do
 
   using do
     quote do
-      alias Hx.Repo
+      use Oban.Testing, repo: Hx.Repo
 
       import Ecto
       import Ecto.Changeset

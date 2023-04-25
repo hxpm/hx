@@ -49,6 +49,8 @@ jobs:
 
             project-name: hx
 
+            setup-db: true
+
     check-types:
         name: Check
 

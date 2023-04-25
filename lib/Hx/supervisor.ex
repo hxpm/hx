@@ -16,7 +16,8 @@ defmodule Hx.Supervisor do
   defp children do
     [
       {Hx.Config, []},
-      {Hx.Repo, []}
+      {Hx.Repo, []},
+      {Hx.Oban, []}
     ]
   end
 end

@@ -20,10 +20,14 @@ defmodule Hx.MixProject do
 
   defp deps do
     [
+      {:bandit, "~> 0.7"},
       {:ecto, "~> 3.10"},
       {:ecto_sql, "~> 3.10"},
       {:jason, "~> 1.4"},
       {:oban, "~> 2.15"},
+      {:phoenix, "~> 1.7"},
+      {:phoenix_html, "~> 3.3"},
+      {:phoenix_live_view, "~> 0.18"},
       {:postgrex, "~> 0.17"},
 
       #

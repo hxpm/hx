@@ -7,7 +7,7 @@ defmodule Hx.Config do
 
   require Logger
 
-  @keys [:database_pool_size, :database_url]
+  @keys [:database_pool_size, :database_url, :signing_salt]
 
   @doc """
   Retrieves the value of a configuration option for the given key.

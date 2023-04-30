@@ -7,7 +7,13 @@ defmodule Hx.Config do
 
   require Logger
 
-  @keys [:database_pool_size, :database_url, :port, :signing_salt]
+  @keys [
+    :database_pool_size,
+    :database_url,
+    :port,
+    :secret_key,
+    :signing_salt
+  ]
 
   @doc """
   Retrieves the value of a configuration option for the given key.
@@ -57,6 +63,10 @@ defmodule Hx.Config do
 
   def load(:port, value) do
     Hx.Config.PositiveIntegerLoader.load(value, 4000)
+  end
+
+  def load(:secret_key, value) do
+    Hx.Config.RequiredLoader.load(value)
   end
 
   def load(:signing_salt, value) do

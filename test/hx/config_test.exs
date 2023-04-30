@@ -18,7 +18,7 @@ defmodule Hx.ConfigTest do
   end
 
   test "to_env/1" do
-    assert Hx.Config.to_env(:database_url) == "HX_DATABASE_URL"
+    assert Hx.Config.to_env(:key) == "HX_KEY"
   end
 
   describe "load/0" do
@@ -42,19 +42,20 @@ defmodule Hx.ConfigTest do
     test "HX_DATABASE_POOL_SIZE must be a positive integer" do
       env = "HX_DATABASE_POOL_SIZE"
 
-      message = "#{env} must be a positive integer."
+      message = "#{env} must be a positive integer"
 
-      Enum.each(["-1", "0", "1.0", "💩"], fn value ->
-        System.put_env(env, value)
+      Enum.each(["-1", "0", "1.0", "💩"], fn
+        value ->
+          System.put_env(env, value)
 
-        assert {:error, ^message} = Hx.Config.load()
+          assert {:error, ^message} = Hx.Config.load()
       end)
     end
 
     test "HX_DATABASE_URL is required" do
       env = "HX_DATABASE_URL"
 
-      message = "#{env} is required."
+      message = "#{env} is required"
 
       System.delete_env(env)
 

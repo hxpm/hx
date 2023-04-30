@@ -34,7 +34,7 @@ defmodule Hx.Config do
             {:ok, Map.put(config, key, value)}
 
           {:error, message} ->
-            {:error, message}
+            {:error, "#{to_env(key)} #{message}"}
         end
 
       _, acc ->
@@ -46,31 +46,13 @@ defmodule Hx.Config do
   Performs any validation and type conversion needed to load a configuration
   option.
   """
-  @spec load(atom, any) :: {:ok, any} | {:error, String.t()}
-  def load(:database_pool_size = key, value) do
-    cond do
-      is_nil(value) || value == "" ->
-        {:ok, 10}
-
-      true ->
-        case Integer.parse(value) do
-          {value, ""} when value > 0 ->
-            {:ok, value}
-
-          _ ->
-            {:error, "#{to_env(key)} must be a positive integer."}
-        end
-    end
+  @spec load(atom, any) :: Hx.Config.Loader.loaded_t()
+  def load(:database_pool_size, value) do
+    Hx.Config.PositiveIntegerLoader.load(value, 10)
   end
 
-  def load(:database_url = key, value) do
-    cond do
-      is_nil(value) || value == "" ->
-        {:error, "#{to_env(key)} is required."}
-
-      true ->
-        {:ok, value}
-    end
+  def load(:database_url, value) do
+    Hx.Config.RequiredLoader.load(value)
   end
 
   def load(_key, value) do
@@ -102,7 +84,7 @@ defmodule Hx.Config do
         {:ok, config}
 
       {:error, message} ->
-        Logger.error("Failed to load configuration. #{message}")
+        Logger.error("Failed to load configuration. #{message}.")
 
         System.stop(1)
     end

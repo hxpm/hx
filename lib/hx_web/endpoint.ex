@@ -26,6 +26,12 @@ defmodule HxWeb.Endpoint do
 
   plug Plug.Session, @session_opts
 
+  plug Plug.Static,
+    at: "/",
+    from: :hx,
+    gzip: false,
+    only: HxWeb.static_paths()
+
   plug HxWeb.Router
 
   #

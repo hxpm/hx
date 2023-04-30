@@ -55,6 +55,10 @@ defmodule Hx.Config do
     Hx.Config.RequiredLoader.load(value)
   end
 
+  def load(:signing_salt, value) do
+    Hx.Config.RequiredLoader.load(value)
+  end
+
   def load(_key, value) do
     {:ok, value}
   end

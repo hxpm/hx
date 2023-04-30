@@ -72,7 +72,7 @@ defmodule Hx.ConfigTest do
     test "HX_SIGNING_SALT is required" do
       env = "HX_SIGNING_SALT"
 
-      message = "#{env} is required."
+      message = "#{env} is required"
 
       System.delete_env(env)
 

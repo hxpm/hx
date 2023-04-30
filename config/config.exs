@@ -7,6 +7,23 @@ import Config
 config :hx, ecto_repos: [Hx.Repo]
 
 #
+# esbuild
+#
+
+config :esbuild,
+  default: [
+    args: [
+      "js/hx.js",
+      "--bundle",
+      "--outdir=../priv/static/assets",
+      "--target=es2022"
+    ],
+    cd: Path.expand("../assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ],
+  version: "0.17.18"
+
+#
 # logger
 #
 

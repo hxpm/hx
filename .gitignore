@@ -30,3 +30,6 @@ hx-*.tar
 
 # Ignore Node.js dependencies.
 /node_modules/
+
+# Ignore static assets produced by build tools.
+/priv/static/assets

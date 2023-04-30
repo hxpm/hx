@@ -3,6 +3,7 @@ defmodule Hx.ConfigTest do
 
   @database_pool_size 5
   @database_url "postgres://postgres:postgres@hx-db:5432/hx"
+  @port 4001
   @signing_salt "fake-signing-salt"
 
   setup do
@@ -10,6 +11,7 @@ defmodule Hx.ConfigTest do
 
     System.put_env("HX_DATABASE_POOL_SIZE", to_string(@database_pool_size))
     System.put_env("HX_DATABASE_URL", @database_url)
+    System.put_env("HX_PORT", to_string(@port))
     System.put_env("HX_SIGNING_SALT", @signing_salt)
 
     on_exit(fn ->
@@ -29,6 +31,7 @@ defmodule Hx.ConfigTest do
         Map.new()
         |> Map.put(:database_pool_size, @database_pool_size)
         |> Map.put(:database_url, @database_url)
+        |> Map.put(:port, @port)
         |> Map.put(:signing_salt, @signing_salt)
 
       assert {:ok, ^expected} = Hx.Config.load()
@@ -67,6 +70,19 @@ defmodule Hx.ConfigTest do
       System.put_env(env, "")
 
       assert {:error, ^message} = Hx.Config.load()
+    end
+
+    test "HX_PORT must be a positive integer" do
+      env = "HX_PORT"
+
+      message = "#{env} must be a positive integer"
+
+      Enum.each(["-1", "0", "1.0", "💩"], fn
+        value ->
+          System.put_env(env, value)
+
+          assert {:error, ^message} = Hx.Config.load()
+      end)
     end
 
     test "HX_SIGNING_SALT is required" do

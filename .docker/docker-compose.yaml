@@ -1,12 +1,21 @@
 services:
     hx:
+        command: mix run --no-halt
+
         depends_on:
             - hx-db
 
         environment:
             HX_DATABASE_URL: postgres://postgres:postgres@hx-db:5432/hx
 
+            HX_SECRET_KEY: QSq9sdzaxdg+rV6gr6vcitj1ffUUA385
+
+            HX_SIGNING_SALT: ErUm6yqmZzbNHwsUWnMzg0N5BncDEbyN
+
         image: ghcr.io/hxpm/elixir:1.14.4
+
+        ports:
+            - 4000:4000
 
         volumes:
             - source: ../

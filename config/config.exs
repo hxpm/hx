@@ -7,6 +7,14 @@ import Config
 config :hx, ecto_repos: [Hx.Repo]
 
 #
+# logger
+#
+
+config :logger, :console,
+  format: "$time $metadata[$level] $message\n",
+  metadata: [:request_id]
+
+#
 # oban
 #
 
@@ -20,6 +28,16 @@ config :hx, Oban,
   ],
   queues: [],
   repo: Hx.Repo
+
+#
+# phoenix
+#
+
+config :hx, HxWeb.Endpoint,
+  adapter: Bandit.PhoenixAdapter,
+  server: true
+
+config :phoenix, :json_library, Jason
 
 # # #
 

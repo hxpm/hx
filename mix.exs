@@ -30,6 +30,7 @@ defmodule Hx.MixProject do
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_view, "~> 0.18"},
       {:postgrex, "~> 0.17"},
+      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
 
       #
       # dev

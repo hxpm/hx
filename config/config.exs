@@ -52,6 +52,12 @@ config :hx, Oban,
 
 config :hx, HxWeb.Endpoint,
   adapter: Bandit.PhoenixAdapter,
+  render_errors: [
+    formats: [
+      html: HxWeb.ErrorHTML
+    ],
+    layout: false
+  ],
   server: true
 
 config :phoenix, :json_library, Jason

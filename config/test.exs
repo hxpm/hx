@@ -1,6 +1,14 @@
 import Config
 
 #
+# argon2_elixir
+#
+
+config :argon2_elixir,
+  m_cost: 8,
+  t_cost: 1
+
+#
 # ecto
 #
 

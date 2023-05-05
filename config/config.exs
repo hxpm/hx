@@ -6,6 +6,8 @@ import Config
 
 config :hx, ecto_repos: [Hx.Repo]
 
+config :hx, Hx.Repo, migration_timestamps: [type: :utc_datetime]
+
 #
 # esbuild
 #

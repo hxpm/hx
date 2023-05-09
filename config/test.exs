@@ -12,7 +12,9 @@ config :argon2_elixir,
 # ecto
 #
 
-config :hx, Hx.Repo, pool: Ecto.Adapters.SQL.Sandbox
+config :hx, Hx.Repo,
+  log: false,
+  pool: Ecto.Adapters.SQL.Sandbox
 
 #
 # oban

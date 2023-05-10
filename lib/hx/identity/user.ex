@@ -1,4 +1,4 @@
-defmodule Hx.User do
+defmodule Hx.Identity.User do
   @moduledoc """
   Individual or entity who interacts with the Hx application.
   """

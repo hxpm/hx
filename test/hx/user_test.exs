@@ -4,6 +4,42 @@ defmodule Hx.UserTest do
   alias Hx.User
   alias Hx.UserFactory
 
+  describe "change_password/1" do
+    test ":password is required" do
+      changeset = Ecto.Changeset.cast(%User{}, %{password: ""}, [:password])
+
+      assert %Ecto.Changeset{
+               errors: [
+                 password: {_, validation: :required}
+               ]
+             } = User.change_password(changeset)
+    end
+
+    test ":password is at least 8 characters" do
+      changeset = Ecto.Changeset.cast(%User{}, %{password: "💩"}, [:password])
+
+      assert %Ecto.Changeset{
+               errors: [
+                 password: {_, count: 8, validation: :length, kind: :min, type: :string}
+               ]
+             } = User.change_password(changeset)
+    end
+
+    test "puts hashed password on :password_digest" do
+      password = "p@$$w0rd!"
+
+      changeset =
+        %User{}
+        |> Ecto.Changeset.cast(%{password: password}, [:password])
+        |> User.change_password()
+
+      password_digest = Ecto.Changeset.get_change(changeset, :password_digest)
+
+      refute Ecto.Changeset.get_change(changeset, :password)
+      assert User.verify_password(password_digest, password)
+    end
+  end
+
   test "hash_password/1" do
     password = "p@$$w0rd!"
 

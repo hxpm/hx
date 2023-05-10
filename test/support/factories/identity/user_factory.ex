@@ -1,5 +1,5 @@
-defmodule Hx.UserFactory do
-  alias Hx.User
+defmodule Hx.Identity.UserFactory do
+  alias Hx.Identity.User
 
   def new(overrides \\ %{}) do
     password_digest = User.hash_password("p@$$w0rd!")

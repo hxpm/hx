@@ -1,8 +1,8 @@
-defmodule Hx.UserTest do
+defmodule Hx.Identity.UserTest do
   use Hx.DataCase, async: true
 
-  alias Hx.User
-  alias Hx.UserFactory
+  alias Hx.Identity.User
+  alias Hx.Identity.UserFactory
 
   describe "change_password/1" do
     test ":password is required" do

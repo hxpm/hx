@@ -12,7 +12,7 @@ defmodule Hx.Config.PositiveIntegerLoader do
   end
 
   @doc """
-  Behaves exactly like `c:Hx.Config.Loader.load/2` but also accepts a default
+  Behaves exactly like `c:Hx.Config.Loader.load/1` but also accepts a default
   value as its third argument. If the provided value is either `nil` or an
   empty string, the default value will be returned. If no default value is
   provided `nil` will be returned.

@@ -23,7 +23,7 @@ config :esbuild,
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ],
-  version: "0.17.18"
+  version: "0.17.19"
 
 #
 # logger

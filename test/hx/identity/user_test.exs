@@ -4,6 +4,67 @@ defmodule Hx.Identity.UserTest do
   alias Hx.Identity.User
   alias Hx.Identity.UserFactory
 
+  describe "change_email/1" do
+    test ":email is required" do
+      changeset = Ecto.Changeset.cast(%User{}, %{email: ""}, [:email])
+
+      assert %Ecto.Changeset{
+               errors: [
+                 email: {_, validation: :required}
+               ]
+             } = User.change_email(changeset)
+    end
+
+    test ":email has the correct format" do
+      changeset = Ecto.Changeset.cast(%User{}, %{email: "💩"}, [:email])
+
+      assert %Ecto.Changeset{
+               errors: [
+                 email: {_, validation: :format}
+               ]
+             } = User.change_email(changeset)
+    end
+
+    test ":email is unique" do
+      user = UserFactory.new() |> Hx.Repo.insert!()
+
+      changeset = Ecto.Changeset.cast(%User{}, %{email: user.email}, [:email])
+
+      assert %Ecto.Changeset{
+               errors: [
+                 email: {_, validation: :unsafe_unique, fields: [:email]}
+               ]
+             } = User.change_email(changeset)
+    end
+
+    test ":email is downcased" do
+      email = UserFactory.new() |> Map.get(:email)
+
+      email = " #{email} "
+
+      changeset = Ecto.Changeset.cast(%User{}, %{email: email}, [:email])
+
+      assert String.trim(email) ==
+               changeset
+               |> User.change_email()
+               |> Ecto.Changeset.get_change(:email)
+    end
+
+    test ":email is trimmed" do
+      email =
+        UserFactory.new()
+        |> Map.get(:email)
+        |> String.upcase()
+
+      changeset = Ecto.Changeset.cast(%User{}, %{email: email}, [:email])
+
+      assert String.downcase(email) ==
+               changeset
+               |> User.change_email()
+               |> Ecto.Changeset.get_change(:email)
+    end
+  end
+
   describe "change_password/1" do
     test ":password is required" do
       changeset = Ecto.Changeset.cast(%User{}, %{password: ""}, [:password])

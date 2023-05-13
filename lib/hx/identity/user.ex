@@ -33,11 +33,30 @@ defmodule Hx.Identity.User do
   end
 
   @doc """
-  Updates an `Ecto.Changeset` with a hashed password.
+  Updates a change to `:email` so that it is in a valid and normalized
+  state before persisting.
 
-  If successful the `:password` field will be removed and the `:password_digest`
-  field will be populated with the hashed password. Performs the same
-  validations as `validate_password/1` before making any changes.
+  Prefer this function over `validate_email/1` when inserting a user or
+  updating the `:email` field for an existing user.
+
+  Performs the same validations as `validate_email/1`.
+  """
+  @spec change_email(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  def change_email(changeset) do
+    changeset
+    |> Ecto.Changeset.validate_required(:email)
+    |> Ecto.Changeset.update_change(:email, &String.downcase/1)
+    |> Ecto.Changeset.update_change(:email, &String.trim/1)
+    |> validate_email()
+  end
+
+  @doc """
+  Updates an `Ecto.Changeset` so that changes to `:password` are in a valid and
+  secure state before persisting.
+
+  Prefer this function over `validate_password/1` when inserting a user.
+
+  Performs the same validations as `validate_password/1`.
   """
   @spec change_password(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def change_password(changeset) do
@@ -47,7 +66,7 @@ defmodule Hx.Identity.User do
       password = Ecto.Changeset.get_change(changeset, :password)
 
       changeset
-      |> Ecto.Changeset.put_change(:password, nil)
+      |> Ecto.Changeset.delete_change(:password)
       |> Ecto.Changeset.put_change(:password_digest, hash_password(password))
     else
       changeset

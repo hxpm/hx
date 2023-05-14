@@ -60,6 +60,7 @@ config :hx, HxWeb.Endpoint,
     ],
     layout: false
   ],
+  pubsub_server: Hx.PubSub,
   server: true
 
 config :phoenix, :json_library, Jason

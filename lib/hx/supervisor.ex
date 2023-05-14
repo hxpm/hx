@@ -18,6 +18,7 @@ defmodule Hx.Supervisor do
       {Hx.Config, []},
       {Hx.Repo, []},
       {Hx.Oban, []},
+      {Hx.PubSub, []},
       {HxWeb.Endpoint, []}
     ]
   end

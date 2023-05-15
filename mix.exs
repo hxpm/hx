@@ -29,6 +29,7 @@ defmodule Hx.MixProject do
       {:jason, "~> 1.4"},
       {:oban, "~> 2.15"},
       {:phoenix, "~> 1.7"},
+      {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_view, "~> 0.18"},
       {:postgrex, "~> 0.17"},

@@ -1,6 +1,12 @@
 services:
     hx:
         volumes:
+            - source: ../
+
+              target: /usr/local/src/hx
+
+              type: bind
+
             - source: ../_build
 
               target: /usr/local/src/hx/_build
@@ -13,8 +19,8 @@ services:
 
               type: bind
 
-            - source: ../
+            - source: ../node_modules
 
-              target: /usr/local/src/hx
+              target: /usr/local/src/hx/node_modules
 
               type: bind

@@ -14,7 +14,7 @@ config :hx, HxWeb.Endpoint,
       "-i",
       "assets/css/hx.css",
       "-o",
-      "priv/static/assets/css/hx.css",
+      "priv/static/assets/hx.css",
       "--watch"
     ]
   ]

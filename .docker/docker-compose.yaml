@@ -36,6 +36,12 @@ services:
 
               type: volume
 
+            - source: hx
+
+              target: /usr/local/src/hx/node_modules
+
+              type: volume
+
         working_dir: /usr/local/src/hx
 
     hx-db:

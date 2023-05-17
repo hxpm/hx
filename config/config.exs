@@ -65,21 +65,6 @@ config :hx, HxWeb.Endpoint,
 
 config :phoenix, :json_library, Jason
 
-#
-# tailwind
-#
-
-config :tailwind,
-  default: [
-    args: [
-      "--config=tailwind.config.js",
-      "--input=css/hx.css",
-      "--output=../priv/static/assets/hx.css"
-    ],
-    cd: Path.expand("../assets", __DIR__)
-  ],
-  version: "3.3.2"
-
 # # #
 
 import_config "#{config_env()}.exs"

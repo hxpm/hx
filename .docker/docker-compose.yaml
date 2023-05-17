@@ -8,7 +8,7 @@ services:
         environment:
             HX_DATABASE_URL: postgres://postgres:postgres@hx-db:5432/hx
 
-            HX_SECRET_KEY: QSq9sdzaxdg+rV6gr6vcitj1ffUUA385
+            HX_SECRET_KEY: menNeYNhHWnga6At2BtYn7ypwcctOIRrsQFIKj2MOoWMoRYwFzQGTc0J+N5FL/gm
 
             HX_SIGNING_SALT: ErUm6yqmZzbNHwsUWnMzg0N5BncDEbyN
 

@@ -24,19 +24,19 @@ services:
 
               type: bind
 
-            - source: hx
+            - source: hx-build
 
               target: /usr/local/src/hx/_build
 
               type: volume
 
-            - source: hx
+            - source: hx-deps
 
               target: /usr/local/src/hx/deps
 
               type: volume
 
-            - source: hx
+            - source: hx-node-modules
 
               target: /usr/local/src/hx/node_modules
 
@@ -60,5 +60,7 @@ services:
 version: "3.9"
 
 volumes:
-    hx:
+    hx-build:
     hx-db:
+    hx-deps:
+    hx-node-modules:

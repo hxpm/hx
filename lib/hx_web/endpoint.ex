@@ -14,6 +14,20 @@ defmodule HxWeb.Endpoint do
   ]
 
   #
+  # code reloading
+  #
+
+  if code_reloading? do
+    plug Phoenix.CodeReloader
+
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :hx
+
+    plug Phoenix.LiveReloader
+
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
+  end
+
+  #
   # plugs
   #
 

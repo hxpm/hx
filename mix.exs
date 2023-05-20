@@ -40,6 +40,7 @@ defmodule Hx.MixProject do
 
       {:dialyxir, "~> 1.3", only: :dev, runtime: false},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false},
+      {:phoenix_live_reload, "~> 1.4", only: :dev},
 
       #
       # test

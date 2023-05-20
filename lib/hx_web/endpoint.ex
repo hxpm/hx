@@ -54,6 +54,7 @@ defmodule HxWeb.Endpoint do
     config =
       config
       |> Keyword.put(:http, port: Hx.Config.get(:port))
+      |> Keyword.put(:live_view, signing_salt: Hx.Config.get(:signing_salt))
       |> Keyword.put(:secret_key_base, Hx.Config.get(:secret_key))
 
     {:ok, config}

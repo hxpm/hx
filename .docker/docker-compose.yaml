@@ -12,7 +12,7 @@ services:
 
             HX_SIGNING_SALT: ErUm6yqmZzbNHwsUWnMzg0N5BncDEbyN
 
-        image: ghcr.io/hxpm/elixir:1.14.4
+        image: ghcr.io/hxpm/elixir:1.14.5
 
         ports:
             - 4000:4000

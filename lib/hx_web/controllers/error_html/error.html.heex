@@ -1,17 +1,15 @@
-<!DOCTYPE html >
+<!DOCTYPE html>
 <html class="h-full" lang="en" style="scrollbar-gutter: stable;">
   <head>
+    <link href={~p"/assets/hx.css"} phx-track-static rel="stylesheet" />
+
     <meta charset="utf-8">
     <meta name="csrf-token" content={get_csrf_token()} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link href={~p"/assets/hx.css"} phx-track-static rel="stylesheet" />
-
-    <script defer phx-track-static src={~p"/assets/hx.js"} type="text/javascript"></script>
-
-    <title>Hx | <%= status_message(@conn.status) %></title>
+    <title><%= status_message(@conn.status) %> | Hx</title>
   </head>
-  <body class="h-full">
+  <body class="antialiased h-full">
     <main class="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div class="text-center">
         <p class="text-base font-semibold text-indigo-600" id="status_code">

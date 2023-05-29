@@ -21,3 +21,9 @@ config :hx, Hx.Repo,
 #
 
 config :hx, Oban, testing: :inline
+
+#
+# phoenix
+#
+
+config :hx, HxWeb.Endpoint, server: false

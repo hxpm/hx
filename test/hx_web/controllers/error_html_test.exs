@@ -21,7 +21,7 @@ defmodule HxWeb.ErrorHTMLTest do
         |> Floki.text()
         |> String.trim()
 
-      assert "Hx | Page not found" == title
+      assert "Page not found | Hx" == title
     end
 
     test "status code", %{document: document} do
@@ -63,7 +63,7 @@ defmodule HxWeb.ErrorHTMLTest do
         |> Floki.text()
         |> String.trim()
 
-      assert "Hx | Internal server error" == title
+      assert "Internal server error | Hx" == title
     end
 
     test "status code", %{document: document} do

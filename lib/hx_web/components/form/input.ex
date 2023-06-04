@@ -3,7 +3,15 @@ defmodule HxWeb.Components.Input do
 
   attr :rest, :global, include: ["autocomplete", "name"]
 
+  attr :type, :string, default: nil
+
+  attr :value, :string, default: nil
+
   def input(assigns) do
+    value = Phoenix.HTML.Form.normalize_value(assigns[:type], assigns[:value])
+
+    assigns = assign(assigns, :value, value)
+
     ~H"""
     <input
       class={[
@@ -12,6 +20,8 @@ defmodule HxWeb.Components.Input do
         "placeholder:text-gray-400",
         "sm:leading-6 sm:text-sm"
       ]}
+      type={@type}
+      value={@value}
       {@rest}
     />
     """

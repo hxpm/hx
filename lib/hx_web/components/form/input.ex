@@ -1,6 +1,8 @@
 defmodule HxWeb.Components.Input do
   use Phoenix.Component
 
+  attr :id, :string, default: nil
+
   attr :rest, :global, include: ["autocomplete", "name"]
 
   attr :type, :string, default: nil
@@ -20,6 +22,7 @@ defmodule HxWeb.Components.Input do
         "placeholder:text-gray-400",
         "sm:leading-6 sm:text-sm"
       ]}
+      id={@id}
       type={@type}
       value={@value}
       {@rest}

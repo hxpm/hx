@@ -3,6 +3,8 @@ defmodule HxWeb.Components.Input do
 
   attr :id, :string, default: nil
 
+  attr :name, :string, default: nil
+
   attr :rest, :global, include: ["autocomplete", "name"]
 
   attr :type, :string, default: nil
@@ -23,6 +25,7 @@ defmodule HxWeb.Components.Input do
         "sm:leading-6 sm:text-sm"
       ]}
       id={@id}
+      name={@name}
       type={@type}
       value={@value}
       {@rest}

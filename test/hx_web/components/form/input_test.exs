@@ -35,6 +35,20 @@ defmodule HxWeb.Components.InputTest do
     assert id == assigns[:id]
   end
 
+  test "supports name attribute" do
+    assigns = %{name: "👍"}
+
+    template = ~H"<.input name={@name} />"
+
+    [name] =
+      template
+      |> rendered_to_string()
+      |> Floki.parse_document!()
+      |> Floki.attribute("input", "name")
+
+    assert name == assigns[:name]
+  end
+
   test "supports type attribute" do
     assigns = %{type: "text"}
 

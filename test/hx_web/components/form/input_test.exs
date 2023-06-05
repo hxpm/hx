@@ -35,6 +35,44 @@ defmodule HxWeb.Components.InputTest do
     assert id == assigns[:id]
   end
 
+  test "when the field attribute is present the id attribute is automatically added" do
+    form =
+      %Hx.Identity.User{}
+      |> Ecto.Changeset.cast(%{}, [])
+      |> to_form()
+
+    assigns = %{form: form}
+
+    template = ~H"<.input field={@form[:email]} />"
+
+    [id] =
+      template
+      |> rendered_to_string()
+      |> Floki.parse_document!()
+      |> Floki.attribute("input", "id")
+
+    assert id == assigns[:form][:email].id
+  end
+
+  test "when the field attribute is present the name attribute is automatically added" do
+    form =
+      %Hx.Identity.User{}
+      |> Ecto.Changeset.cast(%{}, [])
+      |> to_form()
+
+    assigns = %{form: form}
+
+    template = ~H"<.input field={@form[:email]} />"
+
+    [name] =
+      template
+      |> rendered_to_string()
+      |> Floki.parse_document!()
+      |> Floki.attribute("input", "name")
+
+    assert name == assigns[:form][:email].name
+  end
+
   test "supports name attribute" do
     assigns = %{name: "👍"}
 

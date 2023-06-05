@@ -3,13 +3,25 @@ defmodule HxWeb.Components.Input do
 
   attr :id, :string, default: nil
 
+  attr :field, Phoenix.HTML.FormField
+
   attr :name, :string, default: nil
 
-  attr :rest, :global, include: ["autocomplete", "name"]
+  attr :rest, :global, include: ["autocomplete"]
 
   attr :type, :string, default: nil
 
   attr :value, :string, default: nil
+
+  def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns =
+      assigns
+      |> assign(:field, nil)
+      |> assign(:id, field.id)
+      |> assign(:name, field.name)
+
+    input(assigns)
+  end
 
   def input(assigns) do
     value = Phoenix.HTML.Form.normalize_value(assigns[:type], assigns[:value])

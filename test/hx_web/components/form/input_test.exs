@@ -35,8 +35,63 @@ defmodule HxWeb.Components.InputTest do
     assert disabled
   end
 
+  test "when the error slot is present an error is rendered" do
+    assigns = %{error: "👎", id: "input"}
+
+    template = ~H"""
+    <.input id={@id}>
+      <:error><%= @error %></:error>
+    </.input>
+    """
+
+    error =
+      template
+      |> rendered_to_string()
+      |> Floki.parse_document!()
+      |> Floki.find("p#" <> assigns[:id] <> "_error")
+      |> Floki.text()
+
+    assert error =~ assigns[:error]
+  end
+
+  test "when the error slot is present the aria-describedby attribute is automatically added" do
+    assigns = %{error: "👎", id: "input"}
+
+    template = ~H"""
+    <.input id={@id}>
+      <:error><%= @error %></:error>
+    </.input>
+    """
+
+    [aria_describedby] =
+      template
+      |> rendered_to_string()
+      |> Floki.parse_document!()
+      |> Floki.attribute("input", "aria-describedby")
+
+    assert aria_describedby == assigns[:id] <> "_error"
+  end
+
+  test "when the error slot is present the aria-invalid attribute is automatically added" do
+    assigns = %{error: "👎", id: "input"}
+
+    template = ~H"""
+    <.input id={@id}>
+      <:error><%= @error %></:error>
+    </.input>
+    """
+
+    [aria_invalid] =
+      template
+      |> rendered_to_string()
+      |> Floki.parse_document!()
+      |> Floki.attribute("input", "aria-invalid")
+
+    assert aria_invalid
+  end
+
   test "supports id attribute" do
-    assigns = %{id: "👍"}
+    assigns = %{id: "input"}
 
     template = ~H"<.input id={@id} />"
 
@@ -88,7 +143,7 @@ defmodule HxWeb.Components.InputTest do
   end
 
   test "supports name attribute" do
-    assigns = %{name: "👍"}
+    assigns = %{name: "input"}
 
     template = ~H"<.input name={@name} />"
 

@@ -21,6 +21,20 @@ defmodule HxWeb.Components.InputTest do
     assert [{"input", _, _}] = html_tree
   end
 
+  test "supports disabled attribute" do
+    assigns = %{}
+
+    template = ~H"<.input disabled />"
+
+    [disabled] =
+      template
+      |> rendered_to_string()
+      |> Floki.parse_document!()
+      |> Floki.attribute("input", "disabled")
+
+    assert disabled
+  end
+
   test "supports id attribute" do
     assigns = %{id: "👍"}
 

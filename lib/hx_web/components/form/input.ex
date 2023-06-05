@@ -23,6 +23,7 @@ defmodule HxWeb.Components.Input do
       |> assign(:field, nil)
       |> assign(:id, field.id)
       |> assign(:name, field.name)
+      |> assign(:value, field.value)
 
     input(assigns)
   end

@@ -1,8 +1,9 @@
-defmodule Hx.Idenity.CreateUserCommandTest do
+defmodule Hx.Identity.CreateUserCommandTest do
   use Hx.DataCase, async: true
 
+  import Hx.Identity.UserAssertions
+
   alias Hx.Identity.User
-  alias Hx.Identity.UserFactory
 
   setup do
     args = %{
@@ -16,105 +17,113 @@ defmodule Hx.Idenity.CreateUserCommandTest do
   end
 
   test ":email is required", %{args: args} do
-    args = Map.put(args, :email, nil)
+    assert_user_email_is_required(fn changeset ->
+      {:error, changeset} =
+        args
+        |> Map.put(:email, changeset.params["email"])
+        |> Hx.Identity.create_user()
 
-    assert {:error, changeset} = Hx.Identity.create_user(args)
-
-    assert %Ecto.Changeset{
-             errors: [
-               email: {_, validation: :required}
-             ]
-           } = changeset
+      changeset
+    end)
   end
 
-  test ":email is the correct format", %{args: args} do
-    args = Map.put(args, :email, "💩")
+  test ":email requires the correct format", %{args: args} do
+    assert_user_email_requires_correct_format(fn changeset ->
+      {:error, changeset} =
+        args
+        |> Map.put(:email, changeset.params["email"])
+        |> Hx.Identity.create_user()
 
-    assert {:error, changeset} = Hx.Identity.create_user(args)
-
-    assert %Ecto.Changeset{
-             errors: [
-               email: {_, validation: :format}
-             ]
-           } = changeset
+      changeset
+    end)
   end
 
-  test ":email is unique", %{args: args} do
-    user = UserFactory.new() |> Hx.Repo.insert!()
+  test ":email requires uniqueness", %{args: args} do
+    assert_user_email_requires_uniqueness(fn changeset ->
+      {:error, changeset} =
+        args
+        |> Map.put(:email, changeset.params["email"])
+        |> Hx.Identity.create_user()
 
-    args = Map.put(args, :email, user.email)
-
-    assert {:error, changeset} = Hx.Identity.create_user(args)
-
-    assert assert %Ecto.Changeset{
-                    errors: [
-                      email: {_, validation: :unsafe_unique, fields: [:email]}
-                    ]
-                  } = changeset
+      changeset
+    end)
   end
 
   test ":email is downcased", %{args: args} do
-    args = Map.put(args, :email, String.upcase(args.email))
+    assert_user_email_is_downcased(fn changeset ->
+      {:ok, user} =
+        args
+        |> Map.put(:email, changeset.params["email"])
+        |> Hx.Identity.create_user()
 
-    assert {:ok, %User{} = user} = Hx.Identity.create_user(args)
-
-    assert user.email == String.downcase(args.email)
+      user.email
+    end)
   end
 
   test ":email is trimmed", %{args: args} do
-    args = Map.put(args, :email, " #{args.email} ")
+    assert_user_email_is_trimmed(fn changeset ->
+      {:ok, user} =
+        args
+        |> Map.put(:email, changeset.params["email"])
+        |> Hx.Identity.create_user()
 
-    assert {:ok, %User{} = user} = Hx.Identity.create_user(args)
-
-    assert user.email == String.trim(args.email)
+      user.email
+    end)
   end
 
   test ":first_name is required", %{args: args} do
-    args = Map.put(args, :first_name, nil)
+    assert_user_first_name_is_required(fn changeset ->
+      {:error, changeset} =
+        args
+        |> Map.put(:first_name, changeset.params["first_name"])
+        |> Hx.Identity.create_user()
 
-    assert {:error, changeset} = Hx.Identity.create_user(args)
-
-    assert %Ecto.Changeset{
-             errors: [
-               first_name: {_, validation: :required}
-             ]
-           } = changeset
+      changeset
+    end)
   end
 
   test ":last_name is required", %{args: args} do
-    args = Map.put(args, :last_name, nil)
+    assert_user_last_name_is_required(fn changeset ->
+      {:error, changeset} =
+        args
+        |> Map.put(:last_name, changeset.params["last_name"])
+        |> Hx.Identity.create_user()
 
-    assert {:error, changeset} = Hx.Identity.create_user(args)
-
-    assert %Ecto.Changeset{
-             errors: [
-               last_name: {_, validation: :required}
-             ]
-           } = changeset
+      changeset
+    end)
   end
 
   test ":password is required", %{args: args} do
-    args = Map.put(args, :password, nil)
+    assert_user_password_is_required(fn changeset ->
+      {:error, changeset} =
+        args
+        |> Map.put(:password, changeset.params["password"])
+        |> Hx.Identity.create_user()
 
-    assert {:error, changeset} = Hx.Identity.create_user(args)
-
-    assert %Ecto.Changeset{
-             errors: [
-               password: {_, validation: :required}
-             ]
-           } = changeset
+      changeset
+    end)
   end
 
   test ":password is at least 8 characters", %{args: args} do
-    args = Map.put(args, :password, "💩")
+    assert_user_password_requires_min_8_length(fn changeset ->
+      {:error, changeset} =
+        args
+        |> Map.put(:password, changeset.params["password"])
+        |> Hx.Identity.create_user()
 
-    assert {:error, changeset} = Hx.Identity.create_user(args)
+      changeset
+    end)
+  end
 
-    assert %Ecto.Changeset{
-             errors: [
-               password: {_, count: 8, validation: :length, kind: :min, type: :string}
-             ]
-           } = changeset
+  test ":password is hashed", %{args: args} do
+    assert_user_password_is_hashed(fn changeset ->
+      {:ok, user} =
+        args
+        |> Map.put(:password, changeset.params["password"])
+        |> Hx.Identity.create_user()
+
+      user.password_digest
+    end)
   end
 
   test "creates a user", %{args: args} do
@@ -123,24 +132,5 @@ defmodule Hx.Idenity.CreateUserCommandTest do
     assert {:ok, %User{}} = Hx.Identity.create_user(args)
 
     assert Hx.Repo.aggregate(User, :count) == 1
-  end
-
-  test "assigns values to a user when it is created", %{args: args} do
-    {:ok, user} = Hx.Identity.create_user(args)
-
-    assert user.email == args.email
-    assert user.first_name == args.first_name
-    assert user.id != nil
-    assert user.inserted_at != nil
-    assert user.last_name == args.last_name
-    assert user.password == nil
-    assert user.password_digest != nil
-    assert user.updated_at != nil
-  end
-
-  test "hashes the password provided when a user is created", %{args: args} do
-    {:ok, user} = Hx.Identity.create_user(args)
-
-    assert User.verify_password(user.password_digest, args.password)
   end
 end

@@ -17,6 +17,12 @@ config :hx, Hx.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 #
+# logger
+#
+
+config :logger, level: :warning
+
+#
 # oban
 #
 

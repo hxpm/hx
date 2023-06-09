@@ -5,17 +5,20 @@ defmodule Hx.Identity.User do
 
   use Hx.Schema
 
+  @type changeset_action_t ::
+          :insert
+
   @type t ::
           %__MODULE__{
             __meta__: Ecto.Schema.Metadata.t(),
-            email: String.t(),
-            first_name: String.t(),
-            id: integer,
-            inserted_at: DateTime.t(),
-            last_name: String.t(),
-            password: String.t(),
-            password_digest: String.t(),
-            updated_at: DateTime.t()
+            email: nil | String.t(),
+            first_name: nil | String.t(),
+            id: nil | integer,
+            inserted_at: nil | DateTime.t(),
+            last_name: nil | String.t(),
+            password: nil | String.t(),
+            password_digest: nil | String.t(),
+            updated_at: nil | DateTime.t()
           }
 
   schema "users" do
@@ -71,6 +74,19 @@ defmodule Hx.Identity.User do
     else
       changeset
     end
+  end
+
+  @doc """
+  Builds a changeset for a specific action.
+  """
+  @spec changeset(t, map, for: changeset_action_t) :: Ecto.Changeset.t()
+  def changeset(user, props, for: :insert) do
+    user
+    |> Ecto.Changeset.cast(props, [:email, :first_name, :last_name, :password])
+    |> change_email()
+    |> validate_first_name()
+    |> validate_last_name()
+    |> change_password()
   end
 
   @doc """

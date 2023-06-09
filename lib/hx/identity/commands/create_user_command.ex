@@ -14,11 +14,7 @@ defmodule Hx.Identity.CreateUserCommand do
           {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def call(args) do
     %User{}
-    |> Ecto.Changeset.cast(args, [:email, :first_name, :last_name, :password])
-    |> User.change_email()
-    |> User.validate_first_name()
-    |> User.validate_last_name()
-    |> User.change_password()
+    |> User.changeset(args, for: :insert)
     |> Repo.insert()
   end
 end

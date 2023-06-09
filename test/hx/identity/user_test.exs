@@ -49,6 +49,103 @@ defmodule Hx.Identity.UserTest do
     end
   end
 
+  describe "changeset/3 for :insert" do
+    setup do
+      args = %{
+        email: "anthony@hx.pm",
+        first_name: "Anthony",
+        last_name: "Smith",
+        password: "p@$$w0rd!"
+      }
+
+      {:ok, %{args: args}}
+    end
+
+    test ":email is required", %{args: args} do
+      assert_user_email_is_required(fn changeset ->
+        User.changeset(%User{}, %{args | email: changeset.params["email"]}, for: :insert)
+      end)
+    end
+
+    test ":email requires the correct format", %{args: args} do
+      assert_user_email_requires_correct_format(fn changeset ->
+        User.changeset(%User{}, %{args | email: changeset.params["email"]}, for: :insert)
+      end)
+    end
+
+    test ":email requires uniqueness", %{args: args} do
+      assert_user_email_requires_uniqueness(fn changeset ->
+        User.changeset(%User{}, %{args | email: changeset.params["email"]}, for: :insert)
+      end)
+    end
+
+    test ":email is downcased", %{args: args} do
+      assert_user_email_is_downcased(fn changeset ->
+        User.changeset(%User{}, %{args | email: changeset.params["email"]}, for: :insert)
+      end)
+    end
+
+    test ":email is trimmed", %{args: args} do
+      assert_user_email_is_trimmed(fn changeset ->
+        User.changeset(%User{}, %{args | email: changeset.params["email"]}, for: :insert)
+      end)
+    end
+
+    test ":email can be valid", %{args: args} do
+      assert_user_email_is_valid(fn changeset ->
+        User.changeset(%User{}, %{args | email: changeset.params["email"]}, for: :insert)
+      end)
+    end
+
+    test ":first_name is required", %{args: args} do
+      assert_user_first_name_is_required(fn changeset ->
+        User.changeset(%User{}, %{args | first_name: changeset.params["first_name"]}, for: :insert)
+      end)
+    end
+
+    test ":first_name can be valid", %{args: args} do
+      assert_user_first_name_is_valid(fn changeset ->
+        User.changeset(%User{}, %{args | first_name: changeset.params["first_name"]}, for: :insert)
+      end)
+    end
+
+    test ":last_name is required", %{args: args} do
+      assert_user_last_name_is_valid(fn changeset ->
+        User.changeset(%User{}, %{args | last_name: changeset.params["last_name"]}, for: :insert)
+      end)
+    end
+
+    test ":last_name can be valid", %{args: args} do
+      assert_user_last_name_is_valid(fn changeset ->
+        User.changeset(%User{}, %{args | last_name: changeset.params["last_name"]}, for: :insert)
+      end)
+    end
+
+    test ":password is required", %{args: args} do
+      assert_user_password_is_required(fn changeset ->
+        User.changeset(%User{}, %{args | password: changeset.params["password"]}, for: :insert)
+      end)
+    end
+
+    test ":password is at least 8 characters", %{args: args} do
+      assert_user_password_requires_min_8_length(fn changeset ->
+        User.changeset(%User{}, %{args | password: changeset.params["password"]}, for: :insert)
+      end)
+    end
+
+    test ":password is hashed", %{args: args} do
+      assert_user_password_is_hashed(fn changeset ->
+        User.changeset(%User{}, %{args | password: changeset.params["password"]}, for: :insert)
+      end)
+    end
+
+    test ":password can be valid", %{args: args} do
+      assert_user_password_is_valid(fn changeset ->
+        User.changeset(%User{}, %{args | password: changeset.params["password"]}, for: :insert)
+      end)
+    end
+  end
+
   test "hash_password/1" do
     password = "p@$$w0rd!"
 

@@ -1,103 +1,51 @@
 defmodule Hx.Identity.UserTest do
   use Hx.DataCase, async: true
 
+  import Hx.Identity.UserAssertions
+
   alias Hx.Identity.User
-  alias Hx.Identity.UserFactory
 
   describe "change_email/1" do
     test ":email is required" do
-      changeset = Ecto.Changeset.cast(%User{}, %{email: ""}, [:email])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 email: {_, validation: :required}
-               ]
-             } = User.change_email(changeset)
+      assert_user_email_is_required(&User.change_email/1)
     end
 
-    test ":email has the correct format" do
-      changeset = Ecto.Changeset.cast(%User{}, %{email: "💩"}, [:email])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 email: {_, validation: :format}
-               ]
-             } = User.change_email(changeset)
+    test ":email requires the correct format" do
+      assert_user_email_requires_correct_format(&User.change_email/1)
     end
 
-    test ":email is unique" do
-      user = UserFactory.new() |> Hx.Repo.insert!()
-
-      changeset = Ecto.Changeset.cast(%User{}, %{email: user.email}, [:email])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 email: {_, validation: :unsafe_unique, fields: [:email]}
-               ]
-             } = User.change_email(changeset)
+    test ":email requires uniqueness" do
+      assert_user_email_requires_uniqueness(&User.change_email/1)
     end
 
     test ":email is downcased" do
-      email = UserFactory.new() |> Map.get(:email)
-
-      email = " #{email} "
-
-      changeset = Ecto.Changeset.cast(%User{}, %{email: email}, [:email])
-
-      assert String.trim(email) ==
-               changeset
-               |> User.change_email()
-               |> Ecto.Changeset.get_change(:email)
+      assert_user_email_is_downcased(&User.change_email/1)
     end
 
     test ":email is trimmed" do
-      email =
-        UserFactory.new()
-        |> Map.get(:email)
-        |> String.upcase()
+      assert_user_email_is_trimmed(&User.change_email/1)
+    end
 
-      changeset = Ecto.Changeset.cast(%User{}, %{email: email}, [:email])
-
-      assert String.downcase(email) ==
-               changeset
-               |> User.change_email()
-               |> Ecto.Changeset.get_change(:email)
+    test ":email can be valid" do
+      assert_user_email_is_valid(&User.change_email/1)
     end
   end
 
   describe "change_password/1" do
     test ":password is required" do
-      changeset = Ecto.Changeset.cast(%User{}, %{password: ""}, [:password])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 password: {_, validation: :required}
-               ]
-             } = User.change_password(changeset)
+      assert_user_password_is_required(&User.change_password/1)
     end
 
     test ":password is at least 8 characters" do
-      changeset = Ecto.Changeset.cast(%User{}, %{password: "💩"}, [:password])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 password: {_, count: 8, validation: :length, kind: :min, type: :string}
-               ]
-             } = User.change_password(changeset)
+      assert_user_password_requires_min_8_length(&User.change_password/1)
     end
 
-    test "puts hashed password on :password_digest" do
-      password = "p@$$w0rd!"
+    test ":password is hashed" do
+      assert_user_password_is_hashed(&User.change_password/1)
+    end
 
-      changeset =
-        %User{}
-        |> Ecto.Changeset.cast(%{password: password}, [:password])
-        |> User.change_password()
-
-      password_digest = Ecto.Changeset.get_change(changeset, :password_digest)
-
-      refute Ecto.Changeset.get_change(changeset, :password)
-      assert User.verify_password(password_digest, password)
+    test ":password can be valid" do
+      assert_user_password_is_valid(&User.change_password/1)
     end
   end
 
@@ -110,114 +58,54 @@ defmodule Hx.Identity.UserTest do
   end
 
   describe "validate_email/1" do
-    test "is required" do
-      changeset = Ecto.Changeset.cast(%User{}, %{email: ""}, [:email])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 email: {_, validation: :required}
-               ]
-             } = User.validate_email(changeset)
+    test ":email is required" do
+      assert_user_email_is_required(&User.validate_email/1)
     end
 
-    test "has correct format" do
-      changeset = Ecto.Changeset.cast(%User{}, %{email: "💩"}, [:email])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 email: {_, validation: :format}
-               ]
-             } = User.validate_email(changeset)
+    test ":email requires the correct format" do
+      assert_user_email_requires_correct_format(&User.validate_email/1)
     end
 
-    test "is unique" do
-      user = UserFactory.new() |> Hx.Repo.insert!()
-
-      changeset = Ecto.Changeset.cast(%User{}, %{email: user.email}, [:email])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 email: {_, validation: :unsafe_unique, fields: [:email]}
-               ]
-             } = User.validate_email(changeset)
+    test ":email requires uniqueness" do
+      assert_user_email_requires_uniqueness(&User.validate_email/1)
     end
 
-    test "can be valid" do
-      changeset = Ecto.Changeset.cast(%User{}, %{email: "anthony@hx.pm"}, [:email])
-
-      assert %Ecto.Changeset{
-               valid?: true
-             } = User.validate_email(changeset)
+    test ":email can be valid" do
+      assert_user_email_is_valid(&User.validate_email/1)
     end
   end
 
   describe "validate_first_name/1" do
-    test "is required" do
-      changeset = Ecto.Changeset.cast(%User{}, %{first_name: ""}, [:first_name])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 first_name: {_, validation: :required}
-               ]
-             } = User.validate_first_name(changeset)
+    test ":first_name is required" do
+      assert_user_first_name_is_required(&User.validate_first_name/1)
     end
 
-    test "can be valid" do
-      changeset = Ecto.Changeset.cast(%User{}, %{first_name: "Anthony"}, [:first_name])
-
-      assert %Ecto.Changeset{
-               valid?: true
-             } = User.validate_first_name(changeset)
+    test ":first_name can be valid" do
+      assert_user_first_name_is_valid(&User.validate_first_name/1)
     end
   end
 
   describe "validate_last_name/1" do
-    test "is required" do
-      changeset = Ecto.Changeset.cast(%User{}, %{last_name: ""}, [:last_name])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 last_name: {_, validation: :required}
-               ]
-             } = User.validate_last_name(changeset)
+    test ":last_name is required" do
+      assert_user_last_name_is_required(&User.validate_last_name/1)
     end
 
-    test "can be valid" do
-      changeset = Ecto.Changeset.cast(%User{}, %{last_name: "Anthony"}, [:last_name])
-
-      assert %Ecto.Changeset{
-               valid?: true
-             } = User.validate_last_name(changeset)
+    test ":last_name can be valid" do
+      assert_user_last_name_is_valid(&User.validate_last_name/1)
     end
   end
 
   describe "validate_password/1" do
-    test "is required" do
-      changeset = Ecto.Changeset.cast(%User{}, %{password: ""}, [:password])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 password: {_, validation: :required}
-               ]
-             } = User.validate_password(changeset)
+    test ":password is required" do
+      assert_user_password_is_required(&User.validate_password/1)
     end
 
-    test "is at least 8 characters" do
-      changeset = Ecto.Changeset.cast(%User{}, %{password: "💩"}, [:password])
-
-      assert %Ecto.Changeset{
-               errors: [
-                 password: {_, count: 8, validation: :length, kind: :min, type: :string}
-               ]
-             } = User.validate_password(changeset)
+    test ":password is at least 8 characters" do
+      assert_user_password_requires_min_8_length(&User.validate_password/1)
     end
 
-    test "can be valid" do
-      changeset = Ecto.Changeset.cast(%User{}, %{password: "p@$$w0rd!"}, [:password])
-
-      assert %Ecto.Changeset{
-               valid?: true
-             } = User.validate_password(changeset)
+    test ":password can be valid" do
+      assert_user_password_is_valid(&User.validate_password/1)
     end
   end
 

@@ -1,6 +1,6 @@
 services:
     hx:
-        command: mix run --no-halt
+        command: elixir --sname hx -S mix run --no-halt
 
         depends_on:
             - hx-db

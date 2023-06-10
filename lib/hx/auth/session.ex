@@ -26,4 +26,24 @@ defmodule Hx.Auth.Session do
 
     timestamps()
   end
+
+  @doc """
+  Determines if the user associated with the session is authenticated.
+
+  A session is only valid if `revoked_at` is `nil`. If `revoked_at` is in the
+  future the session is still considered invalid.
+  """
+  @spec valid?(t) :: boolean()
+  def valid?(session) do
+    cond do
+      is_nil(session) ->
+        false
+
+      is_nil(session.revoked_at) ->
+        true
+
+      true ->
+        false
+    end
+  end
 end

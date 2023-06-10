@@ -28,6 +28,19 @@ defmodule Hx.Auth.Session do
   end
 
   @doc """
+  Creates a session for the given user.
+  """
+  @spec create!(integer) :: t | no_return
+  def create!(user_id) do
+    %__MODULE__{}
+    |> Ecto.Changeset.cast(%{user_id: user_id}, [:user_id])
+    |> Ecto.Changeset.put_change(:token, gen_token())
+    |> Ecto.Changeset.foreign_key_constraint(:user_id)
+    |> Ecto.Changeset.unique_constraint(:token)
+    |> Hx.Repo.insert!()
+  end
+
+  @doc """
   Generates a securely random 32 byte session token.
   """
   @spec gen_token() :: String.t()

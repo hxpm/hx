@@ -3,6 +3,26 @@ defmodule Hx.Auth.SessionTest do
 
   alias Hx.Auth.Session
 
+  alias Hx.Identity.UserFactory
+
+  describe "create/1" do
+    test "foreign key is enforced" do
+      assert_raise Ecto.InvalidChangesetError, ~r/constraint: :foreign/, fn ->
+        Session.create!(0)
+      end
+    end
+
+    test "creates a session" do
+      user = UserFactory.new() |> Hx.Repo.insert!()
+
+      assert Hx.Repo.aggregate(Session, :count) == 0
+
+      assert %Session{} = Session.create!(user.id)
+
+      assert Hx.Repo.aggregate(Session, :count) == 1
+    end
+  end
+
   test "gen_token/0" do
     byte_size =
       Session.gen_token()

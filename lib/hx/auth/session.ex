@@ -17,7 +17,7 @@ defmodule Hx.Auth.Session do
             user_id: integer
           }
 
-  schema "session" do
+  schema "sessions" do
     field :revoked_at, :utc_datetime
 
     field :token, :string
@@ -25,6 +25,16 @@ defmodule Hx.Auth.Session do
     belongs_to :user, Hx.Identity.User
 
     timestamps()
+  end
+
+  @doc """
+  Generates a securely random 32 byte session token.
+  """
+  @spec gen_token() :: String.t()
+  def gen_token do
+    32
+    |> :crypto.strong_rand_bytes()
+    |> Base.encode16()
   end
 
   @doc """

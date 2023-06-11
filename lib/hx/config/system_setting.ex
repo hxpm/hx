@@ -11,11 +11,11 @@ defmodule Hx.Config.SystemSetting do
   @type t ::
           %__MODULE__{
             __meta__: Ecto.Schema.Metadata.t(),
-            id: integer,
-            inserted_at: DateTime.t(),
-            key: String.t(),
-            updated_at: DateTime.t(),
-            value: String.t()
+            id: nil | integer,
+            inserted_at: nil | DateTime.t(),
+            key: nil | String.t(),
+            updated_at: nil | DateTime.t(),
+            value: nil | String.t()
           }
 
   schema "system_settings" do
@@ -34,16 +34,38 @@ defmodule Hx.Config.SystemSetting do
     Hx.Repo.all(__MODULE__)
   end
 
+  @spec cast(t, map, for: :insert) :: Ecto.Changeset.t()
+  def cast(system_setting, props, for: :insert) do
+    Ecto.Changeset.cast(system_setting, props, [:key, :value])
+  end
+
   @doc """
   Creates a system setting.
   """
-  @spec create!(String.t(), String.t()) :: t
+  @spec create!(String.t(), String.t()) :: t | no_return
   def create!(key, value) do
     %__MODULE__{}
-    |> Ecto.Changeset.cast(%{key: key, value: value}, [:key, :value])
+    |> cast(%{key: key, value: value}, for: :insert)
+    |> validate_key()
+    |> validate_value()
+    |> Hx.Repo.insert!()
+  end
+
+  @doc """
+  Validates that `:key` is required and unique.
+  """
+  @spec validate_key(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  def validate_key(changeset) do
+    changeset
     |> Ecto.Changeset.validate_required(:key)
     |> Ecto.Changeset.unique_constraint(:key)
-    |> Ecto.Changeset.validate_required(:value)
-    |> Hx.Repo.insert!()
+  end
+
+  @doc """
+  Validates that `:value` is required.
+  """
+  @spec validate_value(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  def validate_value(changeset) do
+    Ecto.Changeset.validate_required(changeset, :value)
   end
 end

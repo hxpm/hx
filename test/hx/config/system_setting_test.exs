@@ -10,6 +10,15 @@ defmodule Hx.Config.SystemSettingTest do
     assert [^system_setting] = SystemSetting.all()
   end
 
+  test "cast/3 for :insert" do
+    props = %{key: "🔑", value: "📈"}
+
+    changeset = SystemSetting.cast(%SystemSetting{}, props, for: :insert)
+
+    assert props[:key] == Ecto.Changeset.get_change(changeset, :key)
+    assert props[:value] == Ecto.Changeset.get_change(changeset, :value)
+  end
+
   describe "create/2" do
     test ":key is required" do
       assert_raise Ecto.InvalidChangesetError,
@@ -43,6 +52,47 @@ defmodule Hx.Config.SystemSettingTest do
       assert %SystemSetting{} = SystemSetting.create!("key", "value")
 
       assert Hx.Repo.aggregate(SystemSetting, :count) == 1
+    end
+  end
+
+  describe "validate_key/1" do
+    test ":key is required" do
+      changeset =
+        %SystemSetting{}
+        |> Ecto.Changeset.cast(%{key: ""}, [:key])
+        |> SystemSetting.validate_key()
+
+      assert %Ecto.Changeset{
+               errors: [
+                 key: {_, validation: :required}
+               ]
+             } = changeset
+    end
+
+    test ":key has uniqueness constraint" do
+      changeset =
+        %SystemSetting{}
+        |> Ecto.Changeset.cast(%{key: "🔑"}, [:key])
+        |> SystemSetting.validate_key()
+
+      [constraint] = changeset.constraints
+
+      assert %{field: :key, type: :unique} = constraint
+    end
+  end
+
+  describe "validate_value/1" do
+    test ":value is required" do
+      changeset =
+        %SystemSetting{}
+        |> Ecto.Changeset.cast(%{value: ""}, [:value])
+        |> SystemSetting.validate_value()
+
+      assert %Ecto.Changeset{
+               errors: [
+                 value: {_, validation: :required}
+               ]
+             } = changeset
     end
   end
 end

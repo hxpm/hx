@@ -41,7 +41,7 @@ defmodule Hx.Config.SystemSettingTest do
       %{key: key, value: value} = SystemSettingFactory.new() |> Hx.Repo.insert!()
 
       assert_raise Ecto.InvalidChangesetError,
-                   ~r/constraint: :unique, constraint_name: "system_settings_key_index"/,
+                   ~r/constraint: :unique, constraint_name: "system_settings_pkey"/,
                    fn ->
                      SystemSetting.create!(key, value)
                    end
@@ -78,12 +78,10 @@ defmodule Hx.Config.SystemSettingTest do
     test "updates a system setting" do
       system_setting = SystemSettingFactory.new() |> Hx.Repo.insert!()
 
-      id = system_setting.id
       key = system_setting.key
       value = "new value"
 
       assert %SystemSetting{
-               id: ^id,
                key: ^key,
                value: ^value
              } = SystemSetting.update!(system_setting, value)

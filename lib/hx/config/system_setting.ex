@@ -11,16 +11,15 @@ defmodule Hx.Config.SystemSetting do
   @type t ::
           %__MODULE__{
             __meta__: Ecto.Schema.Metadata.t(),
-            id: nil | integer,
             inserted_at: nil | DateTime.t(),
             key: nil | String.t(),
             updated_at: nil | DateTime.t(),
             value: nil | String.t()
           }
 
-  schema "system_settings" do
-    field :key, :string
+  @primary_key {:key, :string, []}
 
+  schema "system_settings" do
     field :value, :string
 
     timestamps()
@@ -86,7 +85,7 @@ defmodule Hx.Config.SystemSetting do
   def validate_key(changeset) do
     changeset
     |> Ecto.Changeset.validate_required(:key)
-    |> Ecto.Changeset.unique_constraint(:key)
+    |> Ecto.Changeset.unique_constraint(:key, name: :system_settings_pkey)
   end
 
   @doc """

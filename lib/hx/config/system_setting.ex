@@ -34,9 +34,26 @@ defmodule Hx.Config.SystemSetting do
     Hx.Repo.all(__MODULE__)
   end
 
-  @spec cast(t, map, for: :insert) :: Ecto.Changeset.t()
+  @doc """
+  Creates a changeset by applying the given props as changes for a particular action.
+
+  Different actions may cast different fields.
+
+  ## Actions
+
+  * `:insert`
+    * `:key`
+    * `:value`
+  * `:update`
+    * `:value`
+  """
+  @spec cast(t, map, for: :insert | :update) :: Ecto.Changeset.t()
   def cast(system_setting, props, for: :insert) do
     Ecto.Changeset.cast(system_setting, props, [:key, :value])
+  end
+
+  def cast(system_setting, props, for: :update) do
+    Ecto.Changeset.cast(system_setting, props, [:value])
   end
 
   @doc """
@@ -49,6 +66,17 @@ defmodule Hx.Config.SystemSetting do
     |> validate_key()
     |> validate_value()
     |> Hx.Repo.insert!()
+  end
+
+  @doc """
+  Updates a system setting.
+  """
+  @spec update!(t, String.t()) :: t | no_return
+  def update!(system_setting, value) do
+    system_setting
+    |> cast(%{value: value}, for: :update)
+    |> validate_value()
+    |> Hx.Repo.update!()
   end
 
   @doc """

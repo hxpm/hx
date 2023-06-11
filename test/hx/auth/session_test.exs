@@ -2,6 +2,7 @@ defmodule Hx.Auth.SessionTest do
   use Hx.DataCase, async: true
 
   alias Hx.Auth.Session
+  alias Hx.Auth.SessionFactory
 
   alias Hx.Identity.UserFactory
 
@@ -30,6 +31,19 @@ defmodule Hx.Auth.SessionTest do
       |> byte_size()
 
     assert byte_size == 32
+  end
+
+  test "revoke/1" do
+    user = UserFactory.new() |> Hx.Repo.insert!()
+
+    session =
+      %{user_id: user.id}
+      |> SessionFactory.new()
+      |> Hx.Repo.insert!()
+
+    assert session = %Session{} = Session.revoke!(session)
+
+    assert session.revoked_at != nil
   end
 
   test "valid?/1" do

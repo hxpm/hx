@@ -1,4 +1,11 @@
 defmodule Hx.Config.SystemSetting do
+  @moduledoc """
+  System configuration setting.
+
+  A system setting does not need to be known before application start. This
+  type of configuration can be dynamic and change during runtime.
+  """
+
   use Hx.Schema
 
   @type t ::

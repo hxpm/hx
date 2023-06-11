@@ -51,6 +51,18 @@ defmodule Hx.Auth.Session do
   end
 
   @doc """
+  Revokes the session.
+
+  When a session is revoked it is no longer considered valid.
+  """
+  @spec revoke!(t) :: t | no_return
+  def revoke!(session) do
+    session
+    |> Ecto.Changeset.cast(%{revoked_at: DateTime.now!("Etc/UTC")}, [:revoked_at])
+    |> Hx.Repo.update!()
+  end
+
+  @doc """
   Determines if the user associated with the session is authenticated.
 
   A session is only valid if `revoked_at` is `nil`. If `revoked_at` is in the

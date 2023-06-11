@@ -25,4 +25,17 @@ defmodule Hx.Config.SystemSetting do
 
     timestamps()
   end
+
+  @doc """
+  Creates a system setting.
+  """
+  @spec create!(String.t(), String.t()) :: t
+  def create!(key, value) do
+    %__MODULE__{}
+    |> Ecto.Changeset.cast(%{key: key, value: value}, [:key, :value])
+    |> Ecto.Changeset.validate_required(:key)
+    |> Ecto.Changeset.unique_constraint(:key)
+    |> Ecto.Changeset.validate_required(:value)
+    |> Hx.Repo.insert!()
+  end
 end

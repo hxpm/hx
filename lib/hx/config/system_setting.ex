@@ -27,6 +27,14 @@ defmodule Hx.Config.SystemSetting do
   end
 
   @doc """
+  Returns all system settings.
+  """
+  @spec all :: [t]
+  def all do
+    Hx.Repo.all(__MODULE__)
+  end
+
+  @doc """
   Creates a system setting.
   """
   @spec create!(String.t(), String.t()) :: t

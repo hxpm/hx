@@ -2,6 +2,13 @@ defmodule Hx.Config.SystemSettingTest do
   use Hx.DataCase, async: true
 
   alias Hx.Config.SystemSetting
+  alias Hx.Config.SystemSettingFactory
+
+  test "all/0" do
+    system_setting = SystemSettingFactory.new() |> Hx.Repo.insert!()
+
+    assert [^system_setting] = SystemSetting.all()
+  end
 
   describe "create/2" do
     test ":key is required" do
@@ -13,12 +20,12 @@ defmodule Hx.Config.SystemSettingTest do
     end
 
     test ":key requires uniqueness" do
-      SystemSetting.create!("key", "value")
+      %{key: key, value: value} = SystemSettingFactory.new() |> Hx.Repo.insert!()
 
       assert_raise Ecto.InvalidChangesetError,
                    ~r/constraint: :unique, constraint_name: "system_settings_key_index"/,
                    fn ->
-                     SystemSetting.create!("key", "value")
+                     SystemSetting.create!(key, value)
                    end
     end
 

@@ -45,9 +45,7 @@ defmodule Hx.Auth.Session do
   """
   @spec gen_token() :: String.t()
   def gen_token do
-    32
-    |> :crypto.strong_rand_bytes()
-    |> Base.encode16()
+    Hx.Crypto.strong_rand_string(32)
   end
 
   @doc """

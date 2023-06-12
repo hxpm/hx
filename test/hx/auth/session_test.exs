@@ -22,15 +22,18 @@ defmodule Hx.Auth.SessionTest do
 
       assert Hx.Repo.aggregate(Session, :count) == 1
     end
+
+    test "automatically assigns a 32 byte token" do
+      user = UserFactory.new() |> Hx.Repo.insert!()
+
+      session = Session.create!(user.id)
+
+      assert byte_size(session.token) == 32
+    end
   end
 
   test "gen_token/0" do
-    byte_size =
-      Session.gen_token()
-      |> Base.decode16!()
-      |> byte_size()
-
-    assert byte_size == 32
+    assert byte_size(Session.gen_token()) == 32
   end
 
   test "revoke/1" do

@@ -99,13 +99,21 @@ defmodule Hx.Identity.UserTest do
 
     test ":first_name is required", %{args: args} do
       assert_user_first_name_is_required(fn changeset ->
-        User.changeset(%User{}, %{args | first_name: changeset.params["first_name"]}, for: :insert)
+        User.changeset(
+          %User{},
+          %{args | first_name: changeset.params["first_name"]},
+          for: :insert
+        )
       end)
     end
 
     test ":first_name can be valid", %{args: args} do
       assert_user_first_name_is_valid(fn changeset ->
-        User.changeset(%User{}, %{args | first_name: changeset.params["first_name"]}, for: :insert)
+        User.changeset(
+          %User{},
+          %{args | first_name: changeset.params["first_name"]},
+          for: :insert
+        )
       end)
     end
 

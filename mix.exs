@@ -30,7 +30,7 @@ defmodule Hx.MixProject do
       {:jason, "1.4.0"},
       {:oban, "== 2.15.2"},
       {:phoenix, "== 1.7.6"},
-      {:phoenix_ecto, "4.4.1"},
+      {:phoenix_ecto, "== 4.4.2"},
       {:phoenix_html, "3.3.1"},
       {:phoenix_live_view, "0.19.0"},
       {:phoenix_pubsub, "2.1.2"},

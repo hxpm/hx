@@ -33,6 +33,7 @@ defmodule Hx.MixProject do
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_view, "~> 0.19"},
+      {:phoenix_pubsub, "~> 2.1"},
       {:postgrex, "~> 0.17"},
 
       #

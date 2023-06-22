@@ -21,34 +21,34 @@ defmodule Hx.MixProject do
 
   defp deps do
     [
-      {:argon2_elixir, "~> 3.1"},
-      {:bandit, "~> 0.7"},
-      {:ecto, "~> 3.10"},
-      {:ecto_sql, "~> 3.10"},
-      {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
-      {:gettext, "~> 0.22"},
-      {:jason, "~> 1.4"},
-      {:oban, "~> 2.15"},
-      {:phoenix, "~> 1.7"},
-      {:phoenix_ecto, "~> 4.4"},
-      {:phoenix_html, "~> 3.3"},
-      {:phoenix_live_view, "~> 0.19"},
-      {:phoenix_pubsub, "~> 2.1"},
-      {:postgrex, "~> 0.17"},
+      {:argon2_elixir, "3.1.0"},
+      {:bandit, "0.7.7"},
+      {:ecto, "3.10.1"},
+      {:ecto_sql, "3.10.1"},
+      {:esbuild, "0.7.0", runtime: Mix.env() == :dev},
+      {:gettext, "0.22.2"},
+      {:jason, "1.4.0"},
+      {:oban, "2.15.0"},
+      {:phoenix, "1.7.2"},
+      {:phoenix_ecto, "4.4.1"},
+      {:phoenix_html, "3.3.1"},
+      {:phoenix_live_view, "0.19.0"},
+      {:phoenix_pubsub, "2.1.2"},
+      {:postgrex, "0.17.1"},
 
       #
       # dev
       #
 
-      {:dialyxir, "~> 1.3", only: :dev, runtime: false},
-      {:ex_doc, "~> 0.29", only: :dev, runtime: false},
-      {:phoenix_live_reload, "~> 1.4", only: :dev},
+      {:dialyxir, "1.3.0", only: :dev, runtime: false},
+      {:ex_doc, "0.29.4", only: :dev, runtime: false},
+      {:phoenix_live_reload, "1.4.1", only: :dev},
 
       #
       # test
       #
 
-      {:floki, "~> 0.34", only: :test}
+      {:floki, "0.34.2", only: :test}
     ]
   end
 

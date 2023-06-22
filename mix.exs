@@ -29,7 +29,7 @@ defmodule Hx.MixProject do
       {:gettext, "0.22.2"},
       {:jason, "1.4.0"},
       {:oban, "== 2.15.2"},
-      {:phoenix, "1.7.2"},
+      {:phoenix, "== 1.7.6"},
       {:phoenix_ecto, "4.4.1"},
       {:phoenix_html, "3.3.1"},
       {:phoenix_live_view, "0.19.0"},

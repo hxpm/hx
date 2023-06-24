@@ -67,9 +67,9 @@ defmodule HxWeb.Endpoint do
   def init(_, config) do
     config =
       config
-      |> Keyword.put(:http, port: Hx.Config.get(:port))
-      |> Keyword.put(:live_view, signing_salt: Hx.Config.get(:signing_salt))
-      |> Keyword.put(:secret_key_base, Hx.Config.get(:secret_key))
+      |> Keyword.put(:http, port: Hx.StartTimeConfig.get(:port))
+      |> Keyword.put(:live_view, signing_salt: Hx.StartTimeConfig.get(:signing_salt))
+      |> Keyword.put(:secret_key_base, Hx.StartTimeConfig.get(:secret_key))
 
     {:ok, config}
   end

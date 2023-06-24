@@ -1,6 +1,17 @@
-defmodule Hx.Config do
+defmodule Hx.StartTimeConfig do
   @moduledoc """
-  Provides access to application runtime configuration.
+  Manages access to configuration needed at application start-time.
+
+  Start-time configuration is a minimum set of configuration needed to start
+  the application. These are static values that are required to be set before
+  application start and cannot be changed at runtime.
+
+  Values are read from environment variables and stored in-memory for quick and
+  easy access. Environment variable names are derived from the supported
+  configuration keys. Each environment variable is comprised of an `HX_` prefix
+  followed by the uppercased configuration key. For example, the
+  `:database_pool_size` configuration key is read from the
+  `HX_DATABASE_POOL_SIZE` environment variable.
   """
 
   use GenServer
@@ -16,7 +27,7 @@ defmodule Hx.Config do
   ]
 
   @doc """
-  Retrieves the value of a configuration option for the given key.
+  Returns a configuration value for the provided key.
   """
   @spec get(module, atom) :: any
   def get(server \\ __MODULE__, key) do
@@ -24,7 +35,10 @@ defmodule Hx.Config do
   end
 
   @doc """
-  Loads configuration from the OS environment and returns a map of the values.
+  Returns a map of start-time configuration.
+
+  Values may be validated and/or coerced into a type. If a value is invalid, an
+  error will be returned.
   """
   @spec load :: {:ok, map} | {:error, String.t()}
   def load do
@@ -48,47 +62,40 @@ defmodule Hx.Config do
     end)
   end
 
-  @doc """
-  Performs any validation and type conversion needed to load a configuration
-  option.
-  """
   @spec load(atom, any) :: Hx.Config.Loader.loaded_t()
-  def load(:database_pool_size, value) do
+  defp load(:database_pool_size, value) do
     Hx.Config.PositiveIntegerLoader.load(value, 10)
   end
 
-  def load(:database_url, value) do
+  defp load(:database_url, value) do
     Hx.Config.RequiredLoader.load(value)
   end
 
-  def load(:port, value) do
+  defp load(:port, value) do
     Hx.Config.PositiveIntegerLoader.load(value, 4000)
   end
 
-  def load(:secret_key, value) do
+  defp load(:secret_key, value) do
     Hx.Config.RequiredLoader.load(value)
   end
 
-  def load(:signing_salt, value) do
+  defp load(:signing_salt, value) do
     Hx.Config.RequiredLoader.load(value)
   end
 
-  def load(_key, value) do
+  defp load(_key, value) do
     {:ok, value}
   end
 
   @spec start_link(keyword) :: GenServer.on_start()
   def start_link(opts) do
-    GenServer.start_link(__MODULE__, :ok, name: opts[:name] || __MODULE__)
+    opts = Keyword.put_new(opts, :name, __MODULE__)
+
+    GenServer.start_link(__MODULE__, opts, name: opts[:name])
   end
 
   @doc """
-  Converts a key to it's corresponding environment variable.
-
-  ## Example
-
-      iex> Hx.Config.to_env(:database_url)
-      "HX_DATABASE_URL"
+  Converts a configuration key to it's corresponding environment variable.
   """
   @spec to_env(atom) :: String.t()
   def to_env(key) do
@@ -96,15 +103,19 @@ defmodule Hx.Config do
   end
 
   @impl true
-  def init(:ok) do
+  def init(_opts) do
     case load() do
       {:ok, config} ->
         {:ok, config}
 
       {:error, message} ->
-        Logger.error("Failed to load configuration. #{message}.")
+        error = "Failed to load configuration. #{message}."
+
+        Logger.error(error)
 
         System.stop(1)
+
+        {:stop, error}
     end
   end
 

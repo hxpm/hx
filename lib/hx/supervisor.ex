@@ -15,7 +15,7 @@ defmodule Hx.Supervisor do
 
   defp children do
     [
-      {Hx.Config, []},
+      {Hx.StartTimeConfig, []},
       {Hx.Repo, []},
       {Hx.Oban, []},
       {Hx.PubSub, []},

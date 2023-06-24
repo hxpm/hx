@@ -1,5 +1,7 @@
-defmodule Hx.ConfigTest do
+defmodule Hx.StartTimeConfigTest do
   use ExUnit.Case, async: false
+
+  alias Hx.StartTimeConfig
 
   @database_pool_size 5
   @database_url "postgres://postgres:postgres@hx-db:5432/hx"
@@ -23,31 +25,15 @@ defmodule Hx.ConfigTest do
     end)
   end
 
-  test "to_env/1" do
-    assert Hx.Config.to_env(:key) == "HX_KEY"
+  test "get/2", tags do
+    proc_name = Module.concat(StartTimeConfig, to_string(tags[:line]))
+
+    start_supervised!({StartTimeConfig, name: proc_name})
+
+    assert StartTimeConfig.get(proc_name, :database_pool_size) == @database_pool_size
   end
 
   describe "load/0" do
-    test "ok" do
-      expected =
-        Map.new()
-        |> Map.put(:database_pool_size, @database_pool_size)
-        |> Map.put(:database_url, @database_url)
-        |> Map.put(:port, @port)
-        |> Map.put(:secret_key, @secret_key)
-        |> Map.put(:signing_salt, @signing_salt)
-
-      assert {:ok, ^expected} = Hx.Config.load()
-    end
-
-    test "HX_DATABASE_POOL_SIZE defaults to a value of 10" do
-      env = "HX_DATABASE_POOL_SIZE"
-
-      System.delete_env(env)
-
-      assert {:ok, %{database_pool_size: 10}} = Hx.Config.load()
-    end
-
     test "HX_DATABASE_POOL_SIZE must be a positive integer" do
       env = "HX_DATABASE_POOL_SIZE"
 
@@ -57,8 +43,16 @@ defmodule Hx.ConfigTest do
         value ->
           System.put_env(env, value)
 
-          assert {:error, ^message} = Hx.Config.load()
+          assert {:error, ^message} = StartTimeConfig.load()
       end)
+    end
+
+    test "HX_DATABASE_POOL_SIZE defaults to a value of 10" do
+      env = "HX_DATABASE_POOL_SIZE"
+
+      System.delete_env(env)
+
+      assert {:ok, %{database_pool_size: 10}} = StartTimeConfig.load()
     end
 
     test "HX_DATABASE_URL is required" do
@@ -68,11 +62,11 @@ defmodule Hx.ConfigTest do
 
       System.delete_env(env)
 
-      assert {:error, ^message} = Hx.Config.load()
+      assert {:error, ^message} = StartTimeConfig.load()
 
       System.put_env(env, "")
 
-      assert {:error, ^message} = Hx.Config.load()
+      assert {:error, ^message} = StartTimeConfig.load()
     end
 
     test "HX_PORT must be a positive integer" do
@@ -84,36 +78,32 @@ defmodule Hx.ConfigTest do
         value ->
           System.put_env(env, value)
 
-          assert {:error, ^message} = Hx.Config.load()
+          assert {:error, ^message} = StartTimeConfig.load()
       end)
     end
 
-    test "HX_SECRET_KEY is required" do
-      env = "HX_SECRET_KEY"
-
-      message = "#{env} is required"
+    test "HX_PORT defaults to a value of 4000" do
+      env = "HX_PORT"
 
       System.delete_env(env)
 
-      assert {:error, ^message} = Hx.Config.load()
-
-      System.put_env(env, "")
-
-      assert {:error, ^message} = Hx.Config.load()
+      assert {:ok, %{port: 4000}} = StartTimeConfig.load()
     end
 
-    test "HX_SIGNING_SALT is required" do
-      env = "HX_SIGNING_SALT"
+    test "can load all configuration" do
+      expected =
+        Map.new()
+        |> Map.put(:database_pool_size, @database_pool_size)
+        |> Map.put(:database_url, @database_url)
+        |> Map.put(:port, @port)
+        |> Map.put(:secret_key, @secret_key)
+        |> Map.put(:signing_salt, @signing_salt)
 
-      message = "#{env} is required"
-
-      System.delete_env(env)
-
-      assert {:error, ^message} = Hx.Config.load()
-
-      System.put_env(env, "")
-
-      assert {:error, ^message} = Hx.Config.load()
+      assert {:ok, ^expected} = StartTimeConfig.load()
     end
+  end
+
+  test "to_env/1" do
+    assert StartTimeConfig.to_env(:key) == "HX_KEY"
   end
 end

@@ -9,7 +9,7 @@ defmodule Hx.Repo do
 
   @impl true
   def init(:runtime, config) do
-    Hx.Config.start_link([])
+    Hx.StartTimeConfig.start_link([])
 
     config =
       config
@@ -26,7 +26,7 @@ defmodule Hx.Repo do
   @spec init(Keyword.t()) :: Keyword.t()
   def init(config) do
     config
-    |> Keyword.put(:pool_size, Hx.Config.get(:database_pool_size))
-    |> Keyword.put(:url, Hx.Config.get(:database_url))
+    |> Keyword.put(:pool_size, Hx.StartTimeConfig.get(:database_pool_size))
+    |> Keyword.put(:url, Hx.StartTimeConfig.get(:database_url))
   end
 end

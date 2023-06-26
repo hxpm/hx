@@ -25,7 +25,7 @@ defmodule Hx.MixProject do
       {:bandit, "0.7.7"},
       {:ecto, "== 3.10.2"},
       {:ecto_sql, "3.10.1"},
-      {:esbuild, "0.7.0", runtime: Mix.env() == :dev},
+      {:esbuild, "== 0.7.1", runtime: Mix.env() == :dev},
       {:gettext, "0.22.2"},
       {:jason, "1.4.0"},
       {:oban, "== 2.15.2"},

@@ -24,7 +24,7 @@ defmodule Hx.MixProject do
       {:argon2_elixir, "3.1.0"},
       {:bandit, "0.7.7"},
       {:ecto, "== 3.10.3"},
-      {:ecto_sql, "3.10.1"},
+      {:ecto_sql, "== 3.10.2"},
       {:esbuild, "== 0.7.1", runtime: Mix.env() == :dev},
       {:gettext, "== 0.23.1"},
       {:jason, "== 1.4.1"},

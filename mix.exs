@@ -34,7 +34,7 @@ defmodule Hx.MixProject do
       {:phoenix_html, "== 3.3.2"},
       {:phoenix_live_view, "== 0.19.5"},
       {:phoenix_pubsub, "== 2.1.3"},
-      {:postgrex, "== 0.17.2"},
+      {:postgrex, "== 0.17.3"},
 
       #
       # dev

@@ -28,7 +28,7 @@ defmodule Hx.MixProject do
       {:esbuild, "== 0.7.1", runtime: Mix.env() == :dev},
       {:gettext, "== 0.23.1"},
       {:jason, "== 1.4.1"},
-      {:oban, "== 2.16.0"},
+      {:oban, "== 2.16.1"},
       {:phoenix, "== 1.7.7"},
       {:phoenix_ecto, "== 4.4.2"},
       {:phoenix_html, "== 3.3.2"},

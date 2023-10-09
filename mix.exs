@@ -21,7 +21,7 @@ defmodule Hx.MixProject do
 
   defp deps do
     [
-      {:argon2_elixir, "== 3.2.1"},
+      {:argon2_elixir, "== 4.0.0"},
       {:bandit, "0.7.7"},
       {:ecto, "== 3.10.3"},
       {:ecto_sql, "== 3.10.2"},

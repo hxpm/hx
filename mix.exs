@@ -31,7 +31,7 @@ defmodule Hx.MixProject do
       {:oban, "== 2.16.2"},
       {:phoenix, "== 1.7.7"},
       {:phoenix_ecto, "== 4.4.2"},
-      {:phoenix_html, "== 3.3.2"},
+      {:phoenix_html, "== 3.3.3"},
       {:phoenix_live_view, "== 0.20.1"},
       {:phoenix_pubsub, "== 2.1.3"},
       {:postgrex, "== 0.17.3"},

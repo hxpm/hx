@@ -22,7 +22,7 @@ defmodule Hx.MixProject do
   defp deps do
     [
       {:argon2_elixir, "== 4.0.0"},
-      {:bandit, "== 1.0.0"},
+      {:bandit, "== 1.1.0"},
       {:ecto, "== 3.10.3"},
       {:ecto_sql, "== 3.10.2"},
       {:esbuild, "== 0.7.1", runtime: Mix.env() == :dev},

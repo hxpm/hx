@@ -32,7 +32,7 @@ defmodule Hx.MixProject do
       {:phoenix, "== 1.7.10"},
       {:phoenix_ecto, "== 4.4.3"},
       {:phoenix_html, "== 4.0.0"},
-      {:phoenix_live_view, "== 0.20.3"},
+      {:phoenix_live_view, "== 0.20.17"},
       {:phoenix_pubsub, "== 2.1.3"},
       {:postgrex, "== 0.17.4"},
 

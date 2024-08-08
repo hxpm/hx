@@ -48,7 +48,7 @@ services:
         environment:
             POSTGRES_PASSWORD: postgres
 
-        image: postgres:16.1
+        image: postgres:16.4
 
         volumes:
             - source: hx-db

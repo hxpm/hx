@@ -48,7 +48,7 @@ defmodule Hx.MixProject do
       # test
       #
 
-      {:floki, "== 0.35.3", only: :test}
+      {:floki, "== 0.38.4", only: :test}
     ]
   end
 
